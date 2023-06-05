@@ -1,24 +1,10 @@
 <script>
   import Slider from './Slider.svelte'
 
-  // 商品詳細の変数
-  let product = {
-    id: 'svelte-book',
-    name: 'Svelte Guide',
-    price: 3500,
-    images: [
-      'https://github.com/svelte-book/sample-app/raw/main/static/svelte-book-1.png',
-      'https://github.com/svelte-book/sample-app/raw/main/static/svelte-book-2.png',
-      'https://github.com/svelte-book/sample-app/raw/main/static/svelte-book-3.png',
-    ],
-  }
+  // +page.server.js の load 関数の戻り値
+  export let data
 
-  // 関連商品の配列
-  let relatedProducts = [
-    { id: 'react-book', name: 'React Book', price: 3500 },
-    { id: 'vue-book', name: 'Vue Book', price: 3500 },
-    { id: 'angular-book', name: 'Angular Book', price: 3500 },
-  ]
+  $: ({ product, relatedProducts } = data)
 
   // カートに入っている商品IDの配列
   let cart = []
