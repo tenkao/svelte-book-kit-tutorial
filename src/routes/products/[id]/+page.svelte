@@ -13,7 +13,7 @@
     <ul class="header-link">
       <li>ようこそゲストさん</li>
       <li>
-        <a href="/cart">カート (0)</a>
+        <a href="/cart">カート ({cart.length})</a>
       </li>
     </ul>
   </nav>
