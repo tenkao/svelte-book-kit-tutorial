@@ -1,6 +1,9 @@
 // 商品データをページコンポーネントに渡す処理
-import { readFile } from 'fs/promises'
 
+import { readFile } from 'fs/promises'
+import { addToCart, loadCart } from '$lib/server/cart'
+
+// 商品データをロードする
 const loadProducts = async () => {
   // ファイルの位置はプロジェクトのルートからの相対パス
   const content = await readFile('data/products.json', { encoding: 'utf-8' })
@@ -32,6 +35,18 @@ export const load = async ({ params }) => {
   // 関連商品データをデータベースから取得する
   const relatedProducts = await getRelatedProductsFromDatabase(productId)
 
+  // カートのデータを取得する
+  const cart = await loadCart()
+
   // 商品データと関連商品データを返す
-  return { product, relatedProducts }
+  return { product, relatedProducts, cart }
+}
+
+//
+export const actions = {
+  // フォームから送信されたデータを取得し、カートに追加する
+  default: async ({ request }) => {
+    const data = await request.formData()
+    await addToCart(data.get('productId'))
+  },
 }
