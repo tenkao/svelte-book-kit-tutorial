@@ -1,7 +1,7 @@
 import { readFile } from 'fs/promises'
 
 // 商品データを読み込む
-const loadProducts = async () => {
+export const loadProducts = async () => {
   const content = await readFile('data/products.json', { encoding: 'utf-8' })
   return JSON.parse(content)
 }

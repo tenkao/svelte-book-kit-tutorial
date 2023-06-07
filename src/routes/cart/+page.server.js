@@ -1,12 +1,7 @@
-import { readFile } from 'fs/promises'
-import { loadCart } from '$lib/server/cart'
+// カート内の商品データをページコンポーネントに渡す処理
 
-// 商品データをロードする
-const loadProducts = async () => {
-  // ファイルの位置はプロジェクトのルートからの相対パス
-  const content = await readFile('data/products.json', { encoding: 'utf-8' })
-  return JSON.parse(content)
-}
+import { loadProducts } from '$lib/server/product'
+import { loadCart } from '$lib/server/cart'
 
 // カート内にある商品データを取得する
 const getProductsInCart = async () => {
