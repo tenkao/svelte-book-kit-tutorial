@@ -10,7 +10,11 @@ const loadProducts = async () => {
 export const getRecommends = async (baseid) => {
   const products = await loadProducts()
   const candidates = products.filter((product) => product.id !== baseid)
-  return randomSelect(candidates, 3)
+  // return randomSelect(candidates, 3)
+  // 2秒経過してから実現値が得られない Promise を返す
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(randomSelect(candidates, 3)), 2000)
+  })
 }
 
 // 渡された配列から 1 個以上 n 個以下の要素をランダムに抽出する
