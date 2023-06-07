@@ -1,10 +1,21 @@
 <script>
+  import { afterNavigate } from '$app/navigation'
   import Slider from './Slider.svelte'
 
   // +page.server.js の load 関数の戻り値
   export let data
 
+  // 商品詳細、関連商品、カートのデータを取得
   $: ({ product, relatedProducts, cart } = data)
+
+  let recommendRequest = new Promise(() => {})
+
+  // afterNavitate() - コンポーネントのマウント時 or URL遷移時に実行される
+  // おすすめ商品データを取得する
+  afterNavigate(() => {
+    recommendRequest = fetch(`/api/recommend?id=${product.id}`)
+      .then((res) => res.json())
+  })
 </script>
 
 <header class="header">
@@ -43,6 +54,21 @@
     </div>
   </div>
   <footer>
+    <h3>おすすめ商品</h3>
+    {#await recommendRequest}
+      <div>ロード中…</div>
+    {:then products}
+      <ul>
+        {#each products as product}
+          <li>
+            <a href="/products/{product.id}">{product.name}</a>
+            - {product.price} 円
+          </li>
+        {/each}
+      </ul>
+    {:catch}
+      <div>読み込みエラー</div>
+    {/await}
     <h3>関連商品</h3>
     <ul>
       {#each relatedProducts as product}
