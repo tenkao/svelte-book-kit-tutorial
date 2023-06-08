@@ -35,8 +35,9 @@ export const load = async ({ params }) => {
   return { product, relatedProducts, cart }
 }
 
-//
+// フォームアクション
 export const actions = {
+  // POST /products/[id]/ でアクセスされたときの処理
   // フォームから送信されたデータを取得し、カートに追加する
   default: async ({ request }) => {
     const data = await request.formData()
