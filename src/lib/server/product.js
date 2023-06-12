@@ -1,9 +1,9 @@
-import { readFile } from 'fs/promises'
+import { database } from '$lib/server/mongodb'
 
 // 商品データを読み込む
 export const loadProducts = async () => {
-  const content = await readFile('data/products.json', { encoding: 'utf-8' })
-  return JSON.parse(content)
+  const products = await database.collection('products').find()
+  return await products.toArray()
 }
 
 // baseid で指定された商品を除いた商品の中からランダムに 3 つ選んで返す
