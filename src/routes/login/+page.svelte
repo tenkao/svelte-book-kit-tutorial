@@ -10,10 +10,10 @@
     <p>
       <label for="email">メールアドレス</label>
       <input type="text" name="email" id="email" value="{form?.email ?? ''}">
-      {#if form?.error ==== 'missing'}
+      {#if form?.error === 'missing'}
         <div style:color="red">メールアドレスを入力してください。</div>
       {/if}
-      {#if form?.error ==== 'invalid_format'}
+      {#if form?.error === 'invalid_format'}
         <div style:color="red">メールアドレスに @ がありません</div>        
       {/if}
     </p>
