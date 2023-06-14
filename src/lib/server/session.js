@@ -6,7 +6,7 @@ import { database } from '$lib/server/mongodb'
 const expiresIn = 30 * 60 * 1000 // 30分
 
 // セッションを作成する
-const createSession = async (data) => {
+export const createSession = async (data) => {
   const sessionId = crypto.randomUUID()
   const session = {
     _id: sessionId,
