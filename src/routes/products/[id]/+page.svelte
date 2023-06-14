@@ -22,7 +22,7 @@
   <a href="/" class="header-title">Svelte EC</a>
   <nav>
     <ul class="header-link">
-      <li>ようこそゲストさん</li>
+      <li>ようこそゲストさん <a href="/login">ログイン</a></li>
       <li>
         <a href="/cart">カート ({cart.length})</a>
       </li>
