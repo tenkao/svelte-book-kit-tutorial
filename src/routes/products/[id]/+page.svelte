@@ -9,12 +9,16 @@
   $: ({ product, relatedProducts, cart } = data)
 
   let recommendRequest = new Promise(() => {})
+  let userRequest = new Promise(() => {})
 
   // afterNavitate() - コンポーネントのマウント時 or URL遷移時に実行される
-  // おすすめ商品データを取得する
   afterNavigate(() => {
+    // おすすめ商品データを取得する
     recommendRequest = fetch(`/api/recommend?id=${product.id}`)
       .then((res) => res.json())
+
+    // ユーザー情報を取得する
+    userRequest = fetch('/api/self').then((res) => res.json())
   })
 </script>
 
@@ -22,7 +26,16 @@
   <a href="/" class="header-title">Svelte EC</a>
   <nav>
     <ul class="header-link">
-      <li>ようこそゲストさん <a href="/login">ログイン</a></li>
+      <li>
+        ようこそ
+        {#await userRequest then user}
+          {#if user}
+            {user.email} さん <a href="/logout">ログアウト</a>
+          {:else}
+            ゲストさん <a href="/login">ログイン</a>
+          {/if}
+        {/await}
+      </li>
       <li>
         <a href="/cart">カート ({cart.length})</a>
       </li>
