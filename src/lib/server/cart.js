@@ -3,12 +3,14 @@
 import { database } from '$lib/server/mongodb'
 
 // カートに商品データを追加する
-export const addToCart = async (productId) => {
-  await database.collection('cart').insertOne({ productId })
+export const addToCart = async (userId, productId) => {
+  await database.collection('cartItems').insertOne({ userId, productId })
 }
 
 // カート内のデータを取得する
-export const loadCart = async () => {
-  const cart = await database.collection('cart').find()
-  return await cart.map((doc) => doc.productId).toArray()
+export const loadCartItems = async (userId) => {
+  const items = await database.collection('cartItems').find({ userId })
+  const productIds = await items.map((item) => item.productId).toArray()
+  const products = await database.collection('products').find({ _id: { $in: productIds } })
+  return await products.toArray()
 }
