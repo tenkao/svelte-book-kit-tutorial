@@ -14,8 +14,7 @@
   // afterNavitate() - コンポーネントのマウント時 or URL遷移時に実行される
   afterNavigate(() => {
     // おすすめ商品データを取得する
-    recommendRequest = fetch(`/api/recommend?id=${product.id}`)
-      .then((res) => res.json())
+    recommendRequest = fetch(`/api/recommend?id=${product.id}`).then((res) => res.json())
 
     // ユーザー情報を取得する
     userRequest = fetch('/api/self').then((res) => res.json())
@@ -55,10 +54,17 @@
         <dd>{product.price}円</dd>
       </dl>
       <div>
-        {#if !cart.includes(product.id)}
+        {#if !cart.find((item) => item.id === product.id)}
           <form method="POST">
             <input type="hidden" name="productId" value={product.id} />
-            <button>カートに入れる</button>
+            {#await userRequest}
+              <button>カートに入れる</button>
+            {:then user}
+              <button disabled={!user}>カートに入れる</button>
+              {#if !user}
+                <p>カートを使うには<a href="/login">ログイン</a>してください。</p>
+              {/if}
+            {/await}
           </form>
         {:else}
           <button disabled>カート追加済み</button>
