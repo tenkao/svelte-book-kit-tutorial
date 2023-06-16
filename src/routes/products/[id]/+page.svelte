@@ -1,5 +1,6 @@
 <script>
   import { afterNavigate } from '$app/navigation'
+  import { page } from '$app/stores'
   import Slider from './Slider.svelte'
 
   // +page.server.js の load 関数の戻り値
@@ -20,6 +21,14 @@
     userRequest = fetch('/api/self').then((res) => res.json())
   })
 </script>
+
+<svelte:head>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={$page.url} />
+  <meta property="og:title" content={product.name} />
+  <meta property="og:description" content={`${product.name} - ${product.price}円`} />
+</svelte:head>
 
 <header class="header">
   <a href="/" class="header-title">Svelte EC</a>
