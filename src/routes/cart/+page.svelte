@@ -8,13 +8,17 @@
 <h1>カート</h1>
 
 <ul>
-  {#each products as product}
-    <li>
-      <a href="/products/{product.id}">
-        <img src={product.images[0]} alt="" width="150" />
-        {product.name}
-      </a>
-      - {product.price}円
-    </li>
-  {/each}
+  {#if products.length > 0}
+    {#each products as product}
+      <li>
+        <a href="/products/{product.id}">
+          <img src={product.images[0]} alt="" width="150" />
+          {product.name}
+        </a>
+        - {product.price}円
+      </li>
+    {/each}
+  {:else}
+    <li>カートに商品がありません</li>
+  {/if}
 </ul>

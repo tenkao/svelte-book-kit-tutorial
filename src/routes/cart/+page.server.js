@@ -1,21 +1,21 @@
 // カート内の商品データをページコンポーネントに渡す処理
 
 import { loadProducts } from '$lib/server/product'
-import { loadCart } from '$lib/server/cart'
+import { loadCartItems } from '$lib/server/cart'
 
 // カート内にある商品データを取得する
-const getProductsInCart = async () => {
-  const products = await loadProducts()
-  const cart = await loadCart()
-  return cart.map((productId) =>
-    products.find((product) => product.id === productId)
-  )
+const getProductsInCart = async (userId) => {
+  const cartItems = await loadCartItems(userId)
+
+  return cartItems
 }
 
-export const load = async () => {
-  // カート内にある商品データを取得する
-  const products = await getProductsInCart()
+export const load = async ({ locals }) => {
+  // カート内にある商品データを取得して返す
+  let products = []
+  if (locals.currentUser) {
+    products = await getProductsInCart(locals.currentUser.userId)
+  }
 
-  // カート内の商品データを返す
   return { products }
 }
