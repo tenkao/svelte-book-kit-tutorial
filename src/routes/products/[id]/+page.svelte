@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from 'svelte'
   import { afterNavigate } from '$app/navigation'
   import { page } from '$app/stores'
   import Slider from './Slider.svelte'
@@ -12,6 +13,7 @@
   let recommendRequest = new Promise(() => {})
   let userRequest = new Promise(() => {})
   let cart = []
+  let cartOpen = false
 
   // afterNavitate() - コンポーネントのマウント時 or URL遷移時に実行される
   afterNavigate(() => {
@@ -21,6 +23,18 @@
     // ユーザー情報を取得する
     userRequest = fetch('/api/self').then((res) => res.json())
   })
+
+  onMount(() => {
+    loadCart()
+  })
+
+  const loadCart = async () => {
+    cart = await fetch('/api/cart').then((res) => res.json())
+  }
+
+  const toggleCart = () => {
+    cartOpen = !cartOpen
+  }
 </script>
 
 <svelte:head>
@@ -45,8 +59,30 @@
           {/if}
         {/await}
       </li>
-      <li>
-        <a href="/cart">カート ({cart.length})</a>
+      <li class="cart">
+        <a href="/cart" on:click|preventDefault={toggleCart}>
+          カート
+          {#if cart.length > 0}
+            ({cart.length})
+          {/if}
+        </a>
+        {#if cartOpen}
+          <div class="cart-detail">
+            {#if cart.length > 0}
+              <ul>
+                {#each cart as item}
+                  <li>
+                    <a href="/products/{item.id}">{item.name}</a>
+                    - {item.price}円
+                  </li>
+                {/each}
+              </ul>
+            {:else}
+              <div>カートは空です。</div>
+            {/if}
+            <a href="/cart">詳細</a>
+          </div>
+        {/if}
       </li>
     </ul>
   </nav>
@@ -159,5 +195,19 @@
     width: 100%;
     max-width: 400px;
     overflow: hidden;
+  }
+
+  .cart {
+    position: relative;
+  }
+
+  .cart-detail {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    width: 250px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid gray;
   }
 </style>
