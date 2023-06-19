@@ -1,7 +1,9 @@
 // 商品データをページコンポーネントに渡す処理
 
 import { loadProducts } from '$lib/server/product.js'
-import { addToCart, loadCartItems } from '$lib/server/cart'
+
+// プリレンダリングの指定
+export const prerender = true
 
 // 商品データをデータベースから取得する
 const getProductFromDatabase = async (productId) => {
@@ -28,24 +30,6 @@ export const load = async ({ locals, params }) => {
   // 関連商品データをデータベースから取得する
   const relatedProducts = await getRelatedProductsFromDatabase(productId)
 
-  // カートのデータを取得する
-  let cart = []
-  if (locals.currentUser) {
-    cart = await loadCartItems(locals.currentUser.userId)
-  }
-
   // 商品データと関連商品データを返す
-  return { product, relatedProducts, cart }
-}
-
-// フォームアクション
-export const actions = {
-  // POST /products/[id]/ でアクセスされたときの処理
-  // フォームから送信されたデータを取得し、カートに追加する
-  default: async ({ locals, request }) => {
-    if (locals.currentUser) {
-      const data = await request.formData()
-      await addToCart(locals.currentUser.userId, data.get('productId'))
-    }
-  },
+  return { product, relatedProducts }
 }

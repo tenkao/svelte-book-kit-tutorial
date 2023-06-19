@@ -7,6 +7,11 @@ export const addToCart = async (userId, productId) => {
   await database.collection('cartItems').insertOne({ userId, productId })
 }
 
+// カートから商品データを削除する
+export const removeFromCart = async (userId, productId) => {
+  await database.collection('cartItems').deleteOne({ userId, productId })
+}
+
 // カート内のデータを取得する
 export const loadCartItems = async (userId) => {
   const items = await database.collection('cartItems').find({ userId })

@@ -7,10 +7,11 @@
   export let data
 
   // 商品詳細、関連商品、カートのデータを取得
-  $: ({ product, relatedProducts, cart } = data)
+  $: ({ product, relatedProducts } = data)
 
   let recommendRequest = new Promise(() => {})
   let userRequest = new Promise(() => {})
+  let cart = []
 
   // afterNavitate() - コンポーネントのマウント時 or URL遷移時に実行される
   afterNavigate(() => {
@@ -64,7 +65,7 @@
       </dl>
       <div>
         {#if !cart.find((item) => item.id === product.id)}
-          <form method="POST">
+          <form method="POST" action="/cart?/add">
             <input type="hidden" name="productId" value={product.id} />
             {#await userRequest}
               <button>カートに入れる</button>
