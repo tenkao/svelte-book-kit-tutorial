@@ -2,6 +2,7 @@
   import { onMount } from 'svelte'
   import { afterNavigate } from '$app/navigation'
   import { page } from '$app/stores'
+  import { enhance } from '$app/forms'
   import Slider from './Slider.svelte'
 
   // +page.server.js の load 関数の戻り値
@@ -101,7 +102,21 @@
       </dl>
       <div>
         {#if !cart.find((item) => item.id === product.id)}
-          <form method="POST" action="/cart?/add">
+          <form
+            method="POST"
+            action="/cart?/add"
+            use:enhance={() => {
+              // フォームを送信し、完了したらカートの情報を更新する
+              //   use:enhance に渡された関数は、フォームの送信の直前に呼び出される
+              //   フォーム送信が完了すると、返り値の関数が呼び出される
+              return async ({ update }) => {
+                // update を呼び出すと SvelteKit デフォルトの挙動を実行させられる
+                // （フォーム送信後の関数を返す場合、SvelteKit デフォルトの挙動は実行されない）
+                await update()
+                await loadCart()
+              }
+            }}
+          >
             <input type="hidden" name="productId" value={product.id} />
             {#await userRequest}
               <button>カートに入れる</button>
