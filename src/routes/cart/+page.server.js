@@ -2,19 +2,13 @@
 
 import { loadCartItems, addToCart, removeFromCart } from '$lib/server/cart'
 
-// カート内にある商品データを取得する
-const getProductsInCart = async (userId) => {
-  const cartItems = await loadCartItems(userId)
-  return cartItems
-}
-
 export const load = async ({ locals }) => {
   // カート内にある商品データを取得して返す
-  let products = []
+  let cart = []
   if (locals.currentUser) {
-    products = await getProductsInCart(locals.currentUser.userId)
+    cart = await loadCartItems(locals.currentUser.userId)
   }
-  return { products }
+  return { cart }
 }
 
 // フォームアクション

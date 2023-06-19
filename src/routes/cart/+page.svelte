@@ -1,24 +1,26 @@
 <script>
   // +page.server.js の load 関数の戻り値
   export let data
-
-  $: ({ products } = data)
 </script>
 
 <h1>カート</h1>
 
-<ul>
-  {#if products.length > 0}
-    {#each products as product}
+{#if data.cart.length > 0}
+  <ul>
+    {#each data.cart as item}
       <li>
-        <a href="/products/{product.id}">
-          <img src={product.images[0]} alt="" width="150" />
-          {product.name}
+        <a href="/products/{item.id}">
+          <img src={item.images[0]} alt="" width="120" />
+          {item.name}
         </a>
-        - {product.price}円
+        - {item.price}円
+        <form action="?/remove" method="POST">
+          <input type="hidden" name="productId" value={item.id} />
+          <button>削除</button>
+        </form>
       </li>
     {/each}
-  {:else}
-    <li>カートに商品がありません</li>
-  {/if}
-</ul>
+  </ul>
+{:else}
+  <div>カートは空です。</div>
+{/if}
